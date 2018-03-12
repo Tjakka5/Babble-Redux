@@ -2,6 +2,8 @@ local SUBPATH = (...):gsub('%.[^%.]+%.[^%.]+$', '')
 
 local Class = require(SUBPATH..".lib.class")
 
+local Node = require(SUBPATH..".src.node")
+
 local Dialogue = Class()
 
 --- Creates a new Node and initializes it with constructor 'id'.
@@ -12,7 +14,7 @@ local function newNodeInstance(parent, id)
    local constructor = parent.constructors[id]
    local node        = Node(parent)
 
-   return constructor(node)
+   return constructor(node) or node
 end
 
 --- Initializes the Dialogue.
@@ -56,7 +58,7 @@ function Dialogue:pop()
    return self
 end
 
---- Adds a constructor for the Node with ID
+--- Adds a constructor for the Node with ID.
 -- @param id The ID of the constructor
 -- @param constructor The constructor function
 -- @return self
@@ -66,7 +68,28 @@ function Dialogue:addNode(id, constructor)
    return self
 end
 
---- Draws all of the Dialogue in a box
+--- Updates the current Node.
+-- @param dt Delta time
+-- @return self
+function Dialogue:update(dt)
+   while self.current do
+      local continue, state = self.current:update(dt)
+
+      if continue then
+         if type(state) == "string" then
+            self:push(state)
+         elseif not state then
+            self:pop()
+         end
+      else
+         break
+      end
+   end
+
+   return not self.current
+end
+
+--- Draws all of the Dialogue in a box.
 -- @param x The x position
 -- @param y The y position
 -- @param w The width
@@ -74,7 +97,6 @@ end
 -- @param drawBorder To draw a debug border or not
 -- @return self
 function Dialogue:draw(x, y, w, h, drawBorder)
-
    if drawBorder then
       love.graphics.rectangle("line", x, y, w, h)
    end
