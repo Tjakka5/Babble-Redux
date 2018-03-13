@@ -23,6 +23,8 @@ function Dialogue:init()
 
    self.stack   = {}
    self.current = nil
+
+   self.contents = {}
 end
 
 --- Clears the stack and switches to the Node.
@@ -68,6 +70,23 @@ function Dialogue:addNode(id, constructor)
    return self
 end
 
+--- Adds Content to the Dialogue.
+-- @param content The Content to add
+-- @return self
+function Dialogue:addContent(content)
+   self.contents[#self.contents + 1] = content
+
+   return self
+end
+
+--- Clears all Content from the Dialogue.
+-- @return self
+function Dialogue:clear()
+   self.contents = {}
+
+   return self
+end
+
 --- Updates the current Node.
 -- @param dt Delta time
 -- @return self
@@ -97,6 +116,10 @@ end
 -- @param drawBorder To draw a debug border or not
 -- @return self
 function Dialogue:draw(x, y, w, h, drawBorder)
+   for i, content in ipairs(self.contents) do
+      love.graphics.printf(content.subject, x, y + (i - 1) * 24, w, content.modifiers.align)
+   end
+
    if drawBorder then
       love.graphics.rectangle("line", x, y, w, h)
    end

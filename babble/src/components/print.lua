@@ -4,7 +4,7 @@ local Class = require(SUBPATH..".lib.class")
 
 local Print = Class()
 
-function Print:init(message)
+function Print:init(_, message)
    self.message = message
 end
 

@@ -4,7 +4,7 @@ local Class = require(SUBPATH..".lib.class")
 
 local Wait = Class()
 
-function Wait:init(waitTime)
+function Wait:init(_, waitTime)
    self.currTime = 0
    self.waitTime = waitTime
 end

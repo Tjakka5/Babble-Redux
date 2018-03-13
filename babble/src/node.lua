@@ -5,7 +5,8 @@ local Class = require(SUBPATH..".lib.class")
 local Node = Class()
 
 --- Initializes the Node
-function Node:init()
+function Node:init(parent)
+   self.parent     = parent
    self.components = {}
    self.current    = 1
 end
@@ -45,11 +46,12 @@ end
 -- @param constructor The constructor of the Component
 function Node.defineComponent(name, constructor)
    Node[name] = function(self, ...)
-      return self:addComponent(constructor(...))
+      return self:addComponent(constructor(self, ...))
    end
 end
 
 Node.defineComponent("print", require(SUBPATH..".src.components.print"))
 Node.defineComponent("wait",  require(SUBPATH..".src.components.wait"))
+Node.defineComponent("text",  require(SUBPATH..".src.components.text"))
 
 return Node
