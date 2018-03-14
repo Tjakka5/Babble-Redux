@@ -2,6 +2,6 @@ function love.conf(t)
    t.console = true
 
    t.window.vysnc  = false
-   t.window.width  = 480
-   t.window.height = 320
+   t.window.width  = 640
+   t.window.height = 640
 end
